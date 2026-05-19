@@ -1,309 +1,913 @@
-import os, zipfile, shutil
-
-base = "/mnt/data/global_sports_center"
-os.makedirs(base, exist_ok=True)
-
-html = """<!doctype html>
-<html lang="zh-Hant">
+<!doctype html>
+<html lang="zh-Hans">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>全球体育中心</title>
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
 
-<header class="header">
-<div>
-<h1>全球体育中心</h1>
-<p>GLOBAL SPORTS CENTER</p>
-</div>
+<style>
 
-<a class="tg-btn" href="https://t.me/JXC118" target="_blank">官方频道</a>
-</header>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-<section class="hero">
-<div class="hero-content">
+html{
+scroll-behavior:smooth;
+}
 
-<span class="tag">官方入口 · 体育娱乐 · 充值福利</span>
-
-<h2>吉祥坊 · 1win · 1xBet</h2>
-
-<p>
-官方体育娱乐平台入口，精选热门赛事、平台活动与充值福利。
-</p>
-
-<div class="hero-buttons">
-<a href="#platforms" class="primary">查看平台</a>
-<a href="https://t.me/JXC118" class="secondary" target="_blank">加入频道</a>
-</div>
-
-</div>
-</section>
-
-<section class="platforms" id="platforms">
-
-<div class="card">
-<div class="logo">吉祥坊</div>
-<span class="label">老牌体育平台</span>
-<p>稳定运营，适合体育与真人娱乐用户。</p>
-<a href="https://www.astrowb888.com" target="_blank" class="enter">进入官网</a>
-</div>
-
-<div class="card">
-<div class="logo">1win</div>
-<span class="label">热门平台</span>
-<p>注册快捷，适合手机端用户快速体验。</p>
-<a href="https://lkmn.cc/77e5" target="_blank" class="enter">进入官网</a>
-</div>
-
-<div class="card">
-<div class="logo">1xBet</div>
-<span class="label">国际品牌</span>
-<p>覆盖体育、电子、真人等多种玩法。</p>
-<a href="https://reffpa.com/L?tag=d_5590520m_1260c_188bet&site=5590520&ad=1260" target="_blank" class="enter">进入官网</a>
-</div>
-
-</section>
-
-<section class="advantages">
-
-<div class="adv">
-<h3>体育活动</h3>
-<p>热门赛事、串关活动、VIP福利集中展示。</p>
-</div>
-
-<div class="adv">
-<h3>充值优势</h3>
-<p>充值流程简单、到账体验快、适合新用户。</p>
-</div>
-
-<div class="adv">
-<h3>福利频道</h3>
-<p>进入 Telegram 查看最新活动与客服说明。</p>
-</div>
-
-</section>
-
-<footer>
-<a href="https://t.me/JXC118" target="_blank">加入官方频道获取最新福利</a>
-<p>仅限18+用户，活动规则以平台官方页面为准。</p>
-</footer>
-
-</body>
-</html>
-"""
-
-css = """*{margin:0;padding:0;box-sizing:border-box}
 body{
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 background:#07111f;
 color:#fff;
+overflow-x:hidden;
 }
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+z-index:-2;
+
+background:
+radial-gradient(circle at 50% -10%,rgba(37,92,175,.5),transparent 38%),
+linear-gradient(180deg,#08172d 0%,#06101f 45%,#03070e 100%);
+}
+
+body::after{
+content:"";
+position:fixed;
+left:-10%;
+right:-10%;
+top:120px;
+height:260px;
+z-index:-1;
+
+background:
+repeating-linear-gradient(
+90deg,
+transparent 0 68px,
+rgba(255,255,255,.035) 70px
+),
+
+radial-gradient(
+ellipse at center,
+rgba(72,149,255,.18),
+transparent 64%
+);
+
+transform:
+perspective(600px)
+rotateX(58deg);
+
+transform-origin:top;
+}
+
+a{
+text-decoration:none;
+color:inherit;
+}
+
 .header{
+position:sticky;
+top:0;
+z-index:10;
+
+max-width:1120px;
+margin:auto;
+
+padding:16px 18px;
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+background:rgba(6,16,31,.8);
+
+backdrop-filter:blur(16px);
+
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.mark{
+width:42px;
+height:42px;
+
+border-radius:14px;
+
+background:
+linear-gradient(
+135deg,
+#f6d16a,
+#b87b1e
+);
+
+display:grid;
+place-items:center;
+
+color:#111;
+font-weight:950;
+
+box-shadow:
+0 10px 28px rgba(246,209,106,.18);
+}
+
+.brand strong{
+display:block;
+font-size:16px;
+}
+
+.brand span{
+display:block;
+margin-top:2px;
+
+font-size:12px;
+color:#98a8c0;
+}
+
+.tg-btn{
+padding:12px 18px;
+
+border-radius:14px;
+
+background:#1d8fff;
+
+font-weight:900;
+}
+
+.hero{
+display:grid;
+grid-template-columns:1.06fr .94fr;
+
+gap:26px;
+align-items:center;
+
+max-width:1120px;
+margin:auto;
+
+padding:42px 18px 28px;
+}
+
+.eyebrow{
+margin:0 0 14px;
+
+color:#f6d16a;
+
+font-weight:900;
+letter-spacing:.12em;
+font-size:13px;
+}
+
+.hero h1{
+margin:0;
+
+font-size:clamp(42px,6vw,72px);
+
+line-height:1.03;
+letter-spacing:-2px;
+}
+
+.lead{
+max-width:650px;
+
+margin:22px 0 0;
+
+color:#b9c6d9;
+
+font-size:18px;
+line-height:1.75;
+}
+
+.hero-actions{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+
+margin-top:30px;
+}
+
+.btn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+
+min-height:48px;
+padding:0 22px;
+
+border-radius:14px;
+
+font-weight:950;
+
+border:1px solid rgba(255,255,255,.14);
+}
+
+.primary{
+background:
+linear-gradient(
+135deg,
+#f6d16a,
+#d69227
+);
+
+color:#111;
+}
+
+.secondary{
+background:rgba(255,255,255,.07);
+}
+
+.stadium-card{
+min-height:410px;
+
+border-radius:32px;
+
+border:1px solid rgba(255,255,255,.14);
+
+background:
+linear-gradient(
+180deg,
+rgba(255,255,255,.13),
+rgba(255,255,255,.045)
+);
+
+padding:22px;
+
+box-shadow:
+0 30px 80px rgba(0,0,0,.35);
+
+position:relative;
+overflow:hidden;
+}
+
+.stadium-card::before{
+content:"";
+position:absolute;
+inset:0;
+
+background:
+radial-gradient(
+circle at 25% 10%,
+rgba(255,255,255,.32),
+transparent 10%
+),
+
+radial-gradient(
+circle at 75% 10%,
+rgba(255,255,255,.32),
+transparent 10%
+),
+
+linear-gradient(
+160deg,
+rgba(23,91,183,.35),
+transparent 45%
+);
+}
+
+.scoreboard{
+position:relative;
+z-index:1;
+
+border-radius:18px;
+
+background:rgba(0,0,0,.38);
+
+border:1px solid rgba(255,255,255,.12);
+
+padding:14px 16px;
+
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:22px 28px;
-background:rgba(5,10,18,.88);
-border-bottom:1px solid rgba(255,255,255,.08);
-position:sticky;
-top:0;
 }
-.header h1{
-font-size:30px;
-font-weight:900;
-}
-.header p{
+
+.scoreboard span{
+color:#47ff9a;
+font-weight:950;
 font-size:12px;
-margin-top:4px;
-color:#8fa2bf;
-letter-spacing:.14em;
 }
-.tg-btn{
-background:#1d8fff;
-padding:12px 18px;
-border-radius:14px;
-color:#fff;
-text-decoration:none;
-font-weight:800;
+
+.scoreboard strong{
+font-size:18px;
+letter-spacing:.06em;
 }
-.hero{
-height:620px;
+
+.field{
+position:absolute;
+
+left:28px;
+right:28px;
+bottom:68px;
+
+height:190px;
+
+border-radius:28px;
+
 background:
-linear-gradient(rgba(4,8,18,.55),rgba(4,8,18,.82)),
-url('https://images.unsplash.com/photo-1547347298-4074fc3086f0?q=80&w=1600&auto=format&fit=crop') center/cover;
+linear-gradient(
+180deg,
+#16613b,
+#0d3b26
+);
+
+border:1px solid rgba(255,255,255,.18);
+
+box-shadow:
+inset 0 0 0 2px rgba(255,255,255,.08);
+}
+
+.field::before{
+content:"";
+position:absolute;
+inset:24px;
+
+border:2px solid rgba(255,255,255,.25);
+
+border-radius:20px;
+}
+
+.field::after{
+content:"";
+position:absolute;
+
+left:50%;
+top:24px;
+bottom:24px;
+
+border-left:2px solid rgba(255,255,255,.22);
+}
+
+.ball{
+position:absolute;
+
+left:50%;
+top:50%;
+
+width:54px;
+height:54px;
+
+border-radius:50%;
+
+background:
+radial-gradient(
+circle at 35% 30%,
+#fff 0 18%,
+#d8d8d8 20% 45%,
+#111 47% 55%,
+#fff 57%
+);
+
+transform:translate(-50%,-50%);
+
+box-shadow:
+0 20px 30px rgba(0,0,0,.35);
+}
+
+.offer-strip{
+position:absolute;
+
+left:22px;
+right:22px;
+bottom:20px;
+
+z-index:1;
+
+border-radius:16px;
+
+background:rgba(246,209,106,.95);
+
+color:#111;
+
+padding:14px 16px;
+
+text-align:center;
+
+font-weight:950;
+}
+
+.logo-row{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+
+gap:12px;
+
+max-width:1120px;
+margin:4px auto 16px;
+
+padding:0 18px;
+}
+
+.logo-row span{
+height:54px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.06);
+
+border:1px solid rgba(255,255,255,.1);
+
+display:grid;
+place-items:center;
+
+font-size:20px;
+font-weight:950;
+}
+
+.platforms{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+
+gap:14px;
+
+max-width:1120px;
+margin:auto;
+
+padding:0 18px;
+}
+
+.platform-card{
+padding:24px;
+
+border-radius:24px;
+
+background:rgba(11,24,44,.92);
+
+border:1px solid rgba(255,255,255,.11);
+
+box-shadow:
+0 18px 44px rgba(0,0,0,.22);
+}
+
+.platform-top{
 display:flex;
 align-items:center;
-padding:0 7%;
+justify-content:space-between;
+
+margin-bottom:18px;
 }
-.hero-content{
-max-width:700px;
-}
-.tag{
-display:inline-block;
-padding:10px 16px;
-border-radius:999px;
-background:rgba(255,215,100,.12);
-border:1px solid rgba(255,215,100,.35);
-color:#ffd56c;
-font-weight:800;
-margin-bottom:24px;
-}
-.hero h2{
-font-size:72px;
-line-height:1.05;
-font-weight:900;
-}
-.hero p{
-margin-top:22px;
-font-size:20px;
-line-height:1.8;
-color:#c4d0e0;
-}
-.hero-buttons{
-display:flex;
-gap:14px;
-margin-top:34px;
-}
-.primary,.secondary,.enter{
-text-decoration:none;
-}
-.primary{
-background:linear-gradient(135deg,#ffd56c,#d88f20);
-color:#111;
-padding:15px 28px;
-border-radius:16px;
-font-weight:900;
-}
-.secondary{
-background:rgba(255,255,255,.08);
-border:1px solid rgba(255,255,255,.12);
-color:#fff;
-padding:15px 28px;
-border-radius:16px;
-font-weight:900;
-}
-.platforms{
-max-width:1200px;
-margin:auto;
-padding:70px 24px 30px;
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:20px;
-}
-.card{
-background:#0d1b2f;
-border:1px solid rgba(255,255,255,.08);
-border-radius:26px;
-padding:28px;
-}
-.logo{
-font-size:34px;
-font-weight:900;
-}
-.label{
-display:inline-block;
-margin-top:14px;
-background:#ffd56c;
-color:#111;
-padding:6px 12px;
-border-radius:999px;
-font-size:13px;
-font-weight:800;
-}
-.card p{
-margin-top:18px;
-line-height:1.8;
-color:#b5c3d5;
-min-height:70px;
-}
-.enter{
-display:block;
-margin-top:22px;
-background:#1d8fff;
-text-align:center;
-padding:15px;
-border-radius:16px;
-font-weight:900;
-color:#fff;
-}
-.advantages{
-max-width:1200px;
-margin:auto;
-padding:20px 24px 80px;
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:20px;
-}
-.adv{
-background:#0d1b2f;
-border:1px solid rgba(255,255,255,.08);
-padding:28px;
-border-radius:24px;
-}
-.adv h3{
+
+.platform-name{
 font-size:26px;
-margin-bottom:14px;
+font-weight:950;
 }
-.adv p{
-line-height:1.8;
-color:#b5c3d5;
-}
-footer{
-padding:50px 24px 80px;
-text-align:center;
-border-top:1px solid rgba(255,255,255,.06);
-}
-footer a{
-display:inline-block;
-background:linear-gradient(135deg,#ffd56c,#d88f20);
+
+.platform-tag{
+font-size:12px;
+
 color:#111;
-padding:16px 30px;
-border-radius:16px;
-font-weight:900;
-text-decoration:none;
+
+background:#f6d16a;
+
+border-radius:99px;
+
+padding:6px 10px;
+
+font-weight:950;
 }
-footer p{
-margin-top:24px;
-color:#7f92ac;
+
+.platform-card p{
+min-height:86px;
+
+margin:0;
+
+color:#aebbd0;
+
+line-height:1.65;
 }
+
+.platform-actions{
+display:grid;
+gap:10px;
+
+margin-top:20px;
+}
+
+.small{
+min-height:44px;
+border-radius:12px;
+}
+
+.benefits{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+
+gap:14px;
+
+max-width:1120px;
+margin:14px auto 0;
+
+padding:0 18px;
+}
+
+.benefits div,
+.channel-box{
+background:rgba(11,24,44,.92);
+
+border:1px solid rgba(255,255,255,.11);
+
+border-radius:24px;
+
+padding:24px;
+}
+
+.benefits b{
+display:block;
+
+font-size:18px;
+
+color:#f6d16a;
+
+margin-bottom:10px;
+}
+
+.benefits p{
+line-height:1.65;
+color:#aebbd0;
+}
+
+.channel-box{
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+gap:20px;
+
+max-width:1120px;
+margin:14px auto 0;
+
+padding:24px 18px;
+}
+
+.channel-box h2{
+font-size:28px;
+}
+
+.channel-box p{
+margin-top:8px;
+color:#aebbd0;
+line-height:1.65;
+}
+
+.disclaimer{
+margin:24px 0 0;
+
+color:#7f8ea6;
+
+font-size:13px;
+line-height:1.7;
+
+text-align:center;
+}
+
+.float-tg{
+position:fixed;
+
+right:16px;
+bottom:18px;
+
+z-index:9;
+
+width:54px;
+height:54px;
+
+border-radius:18px;
+
+display:grid;
+place-items:center;
+
+background:#2aabee;
+
+font-weight:950;
+
+box-shadow:
+0 18px 38px rgba(42,171,238,.28);
+}
+
 @media(max-width:900px){
+
 .hero{
-height:auto;
-padding:100px 24px;
-}
-.hero h2{
-font-size:48px;
-}
-.platforms,.advantages{
 grid-template-columns:1fr;
 }
-.hero-buttons{
+
+.platforms,
+.benefits,
+.logo-row{
+grid-template-columns:1fr;
+}
+
+.platform-card p{
+min-height:auto;
+}
+
+.channel-box{
+display:block;
+}
+
+.channel-box .btn{
+margin-top:18px;
+width:100%;
+}
+
+}
+
+@media(max-width:520px){
+
+.hero{
+padding-top:26px;
+}
+
+.hero h1{
+font-size:40px;
+}
+
+.lead{
+font-size:16px;
+}
+
+.hero-actions{
 display:grid;
 }
-.primary,.secondary{
-text-align:center;
+
+.btn{
+width:100%;
 }
+
+.stadium-card{
+min-height:300px;
+border-radius:24px;
 }
-"""
 
-with open(os.path.join(base, "index.html"), "w", encoding="utf-8") as f:
-    f.write(html)
+.field{
+left:18px;
+right:18px;
+height:150px;
+}
 
-with open(os.path.join(base, "styles.css"), "w", encoding="utf-8") as f:
-    f.write(css)
+}
 
-zip_path = "/mnt/data/global_sports_center.zip"
+</style>
+</head>
 
-with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
-    z.write(os.path.join(base, "index.html"), "index.html")
-    z.write(os.path.join(base, "styles.css"), "styles.css")
+<body>
 
-preview_dir = "/mnt/data/global_sports_center_preview"
-if os.path.exists(preview_dir):
-    shutil.rmtree(preview_dir)
+<header class="header">
 
-shutil.copytree(base, preview_dir)
+<div class="brand">
 
-print("done")
+<div class="mark">
+GSC
+</div>
+
+<div>
+<strong>全球体育中心</strong>
+<span>GLOBAL SPORTS CENTER</span>
+</div>
+
+</div>
+
+<a class="tg-btn"
+href="https://t.me/JXC118"
+target="_blank">
+官方频道
+</a>
+
+</header>
+
+<section class="hero">
+
+<div class="hero-text">
+
+<p class="eyebrow">
+SPORTS OFFICIAL BONUS HUB
+</p>
+
+<h1>
+全球体育中心
+</h1>
+
+<p class="lead">
+吉祥坊 · 1win · 1xBet 官方入口，
+集中展示体育赛事、平台活动、
+充值优势与 Telegram 福利频道。
+</p>
+
+<div class="hero-actions">
+
+<a class="btn primary"
+href="#platforms">
+查看平台入口
+</a>
+
+<a class="btn secondary"
+href="https://t.me/JXC118"
+target="_blank">
+进入福利频道
+</a>
+
+</div>
+
+</div>
+
+<div class="stadium-card">
+
+<div class="scoreboard">
+<span>LIVE</span>
+<strong>VIP BONUS</strong>
+</div>
+
+<div class="field">
+<div class="ball"></div>
+</div>
+
+<div class="offer-strip">
+首存福利 · 快速充值 · 体育赛事活动
+</div>
+
+</div>
+
+</section>
+
+<section class="logo-row">
+
+<span>吉祥坊</span>
+<span>1win</span>
+<span>1xBet</span>
+
+</section>
+
+<section class="platforms" id="platforms">
+
+<article class="platform-card">
+
+<div class="platform-top">
+<div class="platform-name">吉祥坊</div>
+<div class="platform-tag">老牌体育</div>
+</div>
+
+<p>
+适合重视品牌稳定、
+体育赛事活动和充值便利的新用户。
+</p>
+
+<div class="platform-actions">
+
+<a class="btn primary small"
+href="https://www.astrowb888.com"
+target="_blank">
+进入官网
+</a>
+
+<a class="btn secondary small"
+href="https://t.me/JXC118"
+target="_blank">
+福利频道
+</a>
+
+</div>
+
+</article>
+
+<article class="platform-card">
+
+<div class="platform-top">
+<div class="platform-name">1win</div>
+<div class="platform-tag">快速注册</div>
+</div>
+
+<p>
+注册路径直接，
+手机端打开速度快，
+适合广告流量转化。
+</p>
+
+<div class="platform-actions">
+
+<a class="btn primary small"
+href="https://lkmn.cc/77e5"
+target="_blank">
+进入官网
+</a>
+
+<a class="btn secondary small"
+href="https://t.me/JXC118"
+target="_blank">
+福利频道
+</a>
+
+</div>
+
+</article>
+
+<article class="platform-card">
+
+<div class="platform-top">
+<div class="platform-name">1xBet</div>
+<div class="platform-tag">热门品牌</div>
+</div>
+
+<p>
+覆盖体育、真人、
+电子等多场景，
+适合多类型用户选择。
+</p>
+
+<div class="platform-actions">
+
+<a class="btn primary small"
+href="https://reffpa.com/L?tag=d_5590520m_1260c_188bet&site=5590520&ad=1260"
+target="_blank">
+进入官网
+</a>
+
+<a class="btn secondary small"
+href="https://t.me/JXC118"
+target="_blank">
+福利频道
+</a>
+
+</div>
+
+</article>
+
+</section>
+
+<section class="benefits">
+
+<div>
+<b>体育活动优势</b>
+
+<p>
+覆盖热门赛事、
+串关活动、
+首存福利与返水权益，
+适合体育用户快速选择。
+</p>
+</div>
+
+<div>
+<b>充值优势</b>
+
+<p>
+突出入口清晰、
+流程简单、
+到账体验快，
+新用户更容易完成首充。
+</p>
+</div>
+
+<div>
+<b>频道承接</b>
+
+<p>
+点击进入 Telegram 频道，
+查看最新活动、
+充值说明和客服指引。
+</p>
+</div>
+
+</section>
+
+<section class="channel-box">
+
+<div>
+
+<h2>
+先看最新福利，再选择平台
+</h2>
+
+<p>
+活动会随赛事和时间变化，
+建议进入频道查看最新说明。
+</p>
+
+</div>
+
+<a class="btn primary"
+href="https://t.me/JXC118"
+target="_blank">
+加入 Telegram 频道
+</a>
+
+</section>
+
+<p class="disclaimer">
+仅限 18+ 用户。
+请确认所在地法律允许，
+活动与充值规则以平台官方页面为准。
+</p>
+
+<a class="float-tg"
+href="https://t.me/JXC118"
+target="_blank">
+TG
+</a>
+
+</body>
+</html>
